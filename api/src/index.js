@@ -1,10 +1,13 @@
 // index.js
 // This is the main entry point of our application
+require('dotenv').config();
 const {ApolloServer, gql} = require('apollo-server-express');
 const express = require('express');
 const app = express();
 const port = process.env.PORT || 4000;
-
+const DB_HOST = process.env.DB_HOST;
+const db = require('./db');
+db.connect(DB_HOST);
 
 const notes = [
     {id: '1', content: "This is a note", author: "Adam Scott"},
