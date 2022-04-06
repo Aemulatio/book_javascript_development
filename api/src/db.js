@@ -12,6 +12,10 @@ module.exports = {
             console.log(`Connection error`);
             process.exit();
         });
+        mongoose.connection.on('connect', msg=>{
+            console.log(msg)
+            console.log("Connected")
+        })
     },
     close: () => {
         mongoose.connection.close();
