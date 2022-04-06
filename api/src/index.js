@@ -1,7 +1,8 @@
 // index.js
 // This is the main entry point of our application
 require('dotenv').config();
-const {ApolloServer, gql} = require('apollo-server-express');
+const {ApolloServer} = require('apollo-server-express');
+const typeDefs = require("./schema")
 const express = require('express');
 const app = express();
 const port = process.env.PORT || 4000;
@@ -11,28 +12,8 @@ db.connect(DB_HOST);
 const models = require("./models")
 
 
-const typeDefs = gql`
-    type Query {
-        hello: String!
-        notes: [Note!]!
-        note(id: ID!): Note!
-    }
-
-    type Note {
-        id: ID!
-        content: String!
-        author: String!
-    }
-
-    type Mutation {
-        newNote(content: String!): Note!
-    }
-
-`;
-
 const resolvers = {
     Query: {
-        hello: () => "Hello world!",
         notes: async () => {
             return await models.Note.find();
         },
