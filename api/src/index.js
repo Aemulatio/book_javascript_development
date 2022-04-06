@@ -10,12 +10,6 @@ const db = require('./db');
 db.connect(DB_HOST);
 const models = require("./models")
 
-const notes = [
-    {id: '1', content: "This is a note", author: "Adam Scott"},
-    {id: '2', content: "This is another note", author: "Scot Scott"},
-    {id: '3', content: "This is a third note", author: "S S"},
-]
-
 
 const typeDefs = gql`
     type Query {
@@ -42,16 +36,16 @@ const resolvers = {
         notes: async () => {
             return await models.Note.find();
         },
-        note: (parent, args) => {
-            return notes.find(note => note.id === args.id);
+        note: async (parent, args) => {
+            return await models.Note.findById(args.id)
         },
     },
     Mutation: {
         newNote: async (parent, args) => {
-           return await models.Note.create({
-               content: args.content,
-               author: 'Stepan Svechnikov'
-           })
+            return await models.Note.create({
+                content: args.content,
+                author: 'Stepan Svechnikov'
+            })
         }
 
     }
