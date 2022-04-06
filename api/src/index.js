@@ -10,29 +10,15 @@ const DB_HOST = process.env.DB_HOST;
 const db = require('./db');
 db.connect(DB_HOST);
 const models = require("./models")
+const resolvers = require("./resolvers")
 
-
-const resolvers = {
-    Query: {
-        notes: async () => {
-            return await models.Note.find();
-        },
-        note: async (parent, args) => {
-            return await models.Note.findById(args.id)
-        },
-    },
-    Mutation: {
-        newNote: async (parent, args) => {
-            return await models.Note.create({
-                content: args.content,
-                author: 'Stepan Svechnikov'
-            })
-        }
-
+const server = new ApolloServer({
+    typeDefs,
+    resolvers,
+    context: ()=>{
+        return {models};
     }
-}
-
-const server = new ApolloServer({typeDefs, resolvers})
+})
 server.applyMiddleware({app, path: "/api"})
 
 
