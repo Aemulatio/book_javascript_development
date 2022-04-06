@@ -8,6 +8,7 @@ const port = process.env.PORT || 4000;
 const DB_HOST = process.env.DB_HOST;
 const db = require('./db');
 db.connect(DB_HOST);
+const models = require("./models")
 
 const notes = [
     {id: '1', content: "This is a note", author: "Adam Scott"},
@@ -38,7 +39,9 @@ const typeDefs = gql`
 const resolvers = {
     Query: {
         hello: () => "Hello world!",
-        notes: () => notes,
+        notes: async () => {
+            return await models.Note.find();
+        },
         note: (parent, args) => {
             return notes.find(note => note.id === args.id);
         },
