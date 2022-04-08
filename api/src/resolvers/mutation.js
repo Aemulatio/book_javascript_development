@@ -37,7 +37,7 @@ module.exports = {
     },
 
     signUp: async (parent, {username, email, password}, {models}) => {
-        email= email.trim().toLowerCase();
+        email = email.trim().toLowerCase();
         const hashed = await bcrypt.hash(password, 10);
         const avatar = gravatar(email)
         try {
@@ -49,10 +49,27 @@ module.exports = {
             });
 
             return jwt.sign({id: user._id}, process.env.JWT_SECRET);
-        }catch (err) {
+        } catch (err) {
             console.log(err)
             throw new Error("Ошибка создания аккаунта")
         }
+    },
+    signIn: async (parent, {username, email, password,}, {models}) => {
+        if (email) {
+            email = email.trim().toLowerCase()
+        }
+        const user = await models.User.findOne({
+            $or: [{email}, {username}]
+        });
+
+        if (!user) {
+            throw new AuthenticationError("Error signed in")
+        }
+        const valid = await bcrypt.compare(password, user.password);
+        if (!valid) {
+            throw  new AuthenticationError("Error signed in")
+        }
+        return jwt.sign({id: user._id}, process.env.JWT_SECRET);
     }
 
 }
