@@ -3,11 +3,15 @@ const jwt = require("jsonwebtoken")
 const {AuthenticationError, ForbiddenError} = require("apollo-server-express")
 require("dotenv").config()
 const gravatar = require("../util/gravatar")
+const mongoose = require("mongoose")
 module.exports = {
-    newNote: async (parent, args, {models}) => {
+    newNote: async (parent, args, {models, user}) => {
+        if (!user){
+            throw new AuthenticationError("Необходимо быть авторизованным, для создания записи")
+        }
         return await models.Note.create({
             content: args.content,
-            author: 'Stepan Svechnikov'
+            author:  mongoose.Types.ObjectId(user.id)
         })
     },
 
