@@ -15,16 +15,32 @@ module.exports = {
         })
     },
 
-    deleteNote: async (parent, {id}, {models}) => {
+    deleteNote: async (parent, {id}, {models, user}) => {
+        if (!user){
+            throw new AuthenticationError("Необходимо быть авторизованным, для создания записи")
+        }
+
+        const note = await models.Note.findById(id);
+        if (note && String(note.author) !== user.id){
+            throw new ForbiddenError("У вас нет прав на удаление этой записи")
+        }
+
         try {
-            await models.Note.findOneAndRemove({_id: id});
+            await note.remove();
             return true
         } catch (err) {
             return false;
         }
     },
 
-    updateNote: async (parent, {content, id}, {models}) => {
+    updateNote: async (parent, {content, id}, {models, user}) => {
+        if (!user){
+            throw new AuthenticationError("Необходимо быть авторизованным, для создания записи")
+        }
+        const note = await models.Note.findById(id);
+        if (note && String(note.author) !== user.id){
+            throw new ForbiddenError("У вас нет прав на изменение этой записи")
+        }
         return await models.Note.findOneAndUpdate(
             {
                 _id: id
