@@ -6,22 +6,22 @@ const gravatar = require("../util/gravatar")
 const mongoose = require("mongoose")
 module.exports = {
     newNote: async (parent, args, {models, user}) => {
-        if (!user){
+        if (!user) {
             throw new AuthenticationError("Необходимо быть авторизованным, для создания записи")
         }
         return await models.Note.create({
             content: args.content,
-            author:  mongoose.Types.ObjectId(user.id)
+            author: mongoose.Types.ObjectId(user.id)
         })
     },
 
     deleteNote: async (parent, {id}, {models, user}) => {
-        if (!user){
+        if (!user) {
             throw new AuthenticationError("Необходимо быть авторизованным, для создания записи")
         }
 
         const note = await models.Note.findById(id);
-        if (note && String(note.author) !== user.id){
+        if (note && String(note.author) !== user.id) {
             throw new ForbiddenError("У вас нет прав на удаление этой записи")
         }
 
@@ -34,11 +34,11 @@ module.exports = {
     },
 
     updateNote: async (parent, {content, id}, {models, user}) => {
-        if (!user){
+        if (!user) {
             throw new AuthenticationError("Необходимо быть авторизованным, для создания записи")
         }
         const note = await models.Note.findById(id);
-        if (note && String(note.author) !== user.id){
+        if (note && String(note.author) !== user.id) {
             throw new ForbiddenError("У вас нет прав на изменение этой записи")
         }
         return await models.Note.findOneAndUpdate(
@@ -90,6 +90,45 @@ module.exports = {
             throw  new AuthenticationError("Error signed in")
         }
         return jwt.sign({id: user._id}, process.env.JWT_SECRET);
+    },
+    toggleFavorite: async (parent, {id}, {models, user}) => {
+        if (!user) {
+            throw new AuthenticationError("Необходимо быть авторизованным, для создания записи")
+        }
+        let noteCheck = await models.Note.findById(id)
+        const hasUser = noteCheck.favoritedBy.indexOf(user.id)
+
+        if (hasUser >= 0) {
+            return await models.Note.findByIdAndUpdate(
+                id,
+                {
+                    $pull: {
+                        favoritedBy: mongoose.SchemaTypes.ObjectID(user.id)
+                    },
+                    $inc: {
+                        favoriteCount: -1
+                    }
+                },
+                {
+                    new: true,
+                }
+            );
+        } else {
+            return await models.Note.findByIdAndUpdate(
+                id,
+                {
+                    $pull: {
+                        favoritedBy: mongoose.SchemaTypes.ObjectID(user.id)
+                    },
+                    $inc: {
+                        favoriteCount: 1
+                    }
+                },
+                {
+                    new: true,
+                }
+            );
+        }
     }
 
 }
