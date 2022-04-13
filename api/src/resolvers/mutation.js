@@ -97,13 +97,13 @@ module.exports = {
         }
         let noteCheck = await models.Note.findById(id)
         const hasUser = noteCheck.favoritedBy.indexOf(user.id)
-
+        
         if (hasUser >= 0) {
             return await models.Note.findByIdAndUpdate(
                 id,
                 {
                     $pull: {
-                        favoritedBy: mongoose.SchemaTypes.ObjectID(user.id)
+                        favoritedBy: mongoose.Types.ObjectId(user.id)
                     },
                     $inc: {
                         favoriteCount: -1
@@ -117,8 +117,8 @@ module.exports = {
             return await models.Note.findByIdAndUpdate(
                 id,
                 {
-                    $pull: {
-                        favoritedBy: mongoose.SchemaTypes.ObjectID(user.id)
+                    $push: {
+                        favoritedBy: mongoose.Types.ObjectId(user.id)
                     },
                     $inc: {
                         favoriteCount: 1
