@@ -6,6 +6,11 @@ const typeDefs = require("./schema")
 const express = require('express');
 const app = express();
 const jwt = require('jsonwebtoken')
+const helmet = require("helmet")
+const cors = require("cors")
+
+app.use(helmet());
+app.use(cors())
 
 const port = process.env.PORT || 4000;
 const DB_HOST = process.env.DB_HOST;
