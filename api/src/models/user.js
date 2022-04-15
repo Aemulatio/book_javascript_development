@@ -1,5 +1,4 @@
 const mongoose = require("mongoose")
-const {tr} = require("faker/lib/locales");
 
 const UserSchema = new mongoose.Schema(
     {
