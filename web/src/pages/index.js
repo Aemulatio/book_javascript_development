@@ -1,7 +1,8 @@
 import React from "react";
 import {
   BrowserRouter as Router,
-  Route
+  Route,
+  Routes
 } from "react-router-dom";
 
 import Home from "./home";
@@ -11,11 +12,13 @@ import Favorites from "./favorites";
 const Pages = () => {
   return (
     <Router>
-      <Route exact path="/" component={Home} />
-      <Route path="/mynotes" component={MyNotes} />
-      <Route path="/favorites" component={Favorites} />
+      <Routes>
+        <Route  path="/" element={<Home/>} />
+        <Route path="/mynotes" element={<MyNotes/>} />
+        <Route path='/favorites' element={<Favorites/>}/>
+      </Routes>
     </Router>
   );
 };
 
-export default Pages
+export default Pages;
