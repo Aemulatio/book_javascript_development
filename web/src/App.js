@@ -4,7 +4,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
 
-import './App.css';
 
 const App = () => {
     return (
@@ -15,4 +14,4 @@ const App = () => {
     );
 };
 
-export default App;
+ReactDOM.render(<App/>, document.querySelector("#root"))
