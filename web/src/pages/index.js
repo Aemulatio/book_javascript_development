@@ -5,6 +5,8 @@ import {
   Routes
 } from "react-router-dom";
 
+import Layout from "../components/Layout";
+
 import Home from "./home";
 import MyNotes from "./mynotes";
 import Favorites from "./favorites";
@@ -12,11 +14,13 @@ import Favorites from "./favorites";
 const Pages = () => {
   return (
     <Router>
-      <Routes>
-        <Route  path="/" element={<Home/>} />
-        <Route path="/mynotes" element={<MyNotes/>} />
-        <Route path='/favorites' element={<Favorites/>}/>
-      </Routes>
+      <Layout>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/mynotes" element={<MyNotes />} />
+          <Route path="/favorites" element={<Favorites />} />
+        </Routes>
+      </Layout>
     </Router>
   );
 };
