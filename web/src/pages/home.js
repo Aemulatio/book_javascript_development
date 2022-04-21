@@ -1,9 +1,11 @@
 import React from "react";
 import {useQuery, gql} from "@apollo/client";
+import ReactMarkdown from "react-markdown";
 
 import Header from "../components/Header";
 import Navigation from "../components/Navigation";
 import Button from "../components/Button";
+import NoteFeed from "../components/NoteFeed";
 
 
 const GET_NOTES = gql`
@@ -29,20 +31,10 @@ const GET_NOTES = gql`
 const Home = () => {
     const {data, loading, error, fetchMore} = useQuery(GET_NOTES);
 
-    if (loading) return (
-        <>
-            <p>Loading...</p>
-            {console.log(error)}
-        </>);
+    if (loading) return <p>Loading...</p>;
 
     if (error) return <p>Error!</p>;
 
-    return (
-        <div>
-            {console.log(data)}
-            <p>Data loaded!</p>
-            <Button>Click me</Button>
-        </div>
-    )
+    return <NoteFeed notes={data.noteFeed.notes}/>
 }
 export default Home
