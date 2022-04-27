@@ -37,14 +37,14 @@ const Note = ({ note }) => {
         </MetaInfo>
         <MetaInfo>
           <em>by</em> {note.author.username} <br />
-          {format(parseISO(note.createdAt), "MMM Do yyyy")}
+          {format(parseISO(note.createdAt), "MMM do yyyy")}
         </MetaInfo>
         <UserActions>
           <em>Favorites:</em> {note.favoriteCount}
           <ReactMarkdown source={note.content} />
         </UserActions>
       </MetaData>
-      <ReactMarkdown source={note.content} />
+      <ReactMarkdown children={note.content} />
     </StyledNote>
 )
 };
