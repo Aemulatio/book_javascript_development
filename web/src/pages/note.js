@@ -1,16 +1,34 @@
 import React from "react";
 import { useParams } from "react-router-dom";
+import { useQuery, gql } from "@apollo/client";
+import Note from "../components/Note";
+
+const GET_NOTE = gql`
+    query note($id: ID!){
+        note(id: $id){
+            id
+            createdAt
+            content
+            favoriteCount
+            author {
+                username
+                id
+                avatar
+            }
+        }
+    }
+`;
+
 
 const NotePage = () => {
-  const props = useParams();
+  const id = useParams().id;
 
-  return (
-    <div>
-      <p>
-        ID: {props.id}
-      </p>
-    </div>
-  );
+  const { loading, error, data } = useQuery(GET_NOTE, { variables: { id } });
+
+  if (loading) return <p>Loading....</p>
+  if (error) return <p>Error! Note not found</p>
+
+  return <Note note={data.note}/>
 };
 
 export default NotePage;
