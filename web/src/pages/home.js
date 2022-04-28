@@ -35,6 +35,32 @@ const Home = () => {
 
     if (error) return <p>Error!</p>;
 
-    return <NoteFeed notes={data.noteFeed.notes}/>
+    return (
+        <>
+            <NoteFeed notes={data.noteFeed.notes}/>
+            {data.noteFeed.hasNextPage && (
+                <Button onClick={() =>
+                    fetchMore({
+                        variables: {cursor: data.noteFeed.cursor},
+                        updateQuery: (previousResult, {fetchMoreResult}) => {
+                            return {
+                                noteFeed: {
+                                    cursor: fetchMoreResult.noteFeed.cursor,
+                                    hasNextPage: fetchMoreResult.noteFeed.hasNextPage,
+                                    notes: [
+                                        ...previousResult.noteFeed.notes,
+                                        ...fetchMoreResult.noteFeed.notes,
+                                    ],
+                                    __typename: 'noteFeed'
+                                }
+                            }
+                        }
+                    })
+                }>
+                    Load more
+                </Button>
+            )}
+        </>
+    )
 }
 export default Home
