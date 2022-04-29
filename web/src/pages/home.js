@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect} from "react";
 import {useQuery, gql} from "@apollo/client";
 import ReactMarkdown from "react-markdown";
 
@@ -29,6 +29,10 @@ const GET_NOTES = gql`
 `;
 
 const Home = () => {
+    useEffect(() => {
+        document.title = "Notedly";
+    })
+
     const {data, loading, error, fetchMore} = useQuery(GET_NOTES);
 
     if (loading) return <p>Loading...</p>;
