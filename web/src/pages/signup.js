@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import styled from 'styled-components'
 
 import Button from "../components/Button";
@@ -27,19 +27,27 @@ const SignUp = (props) => {
     useEffect(() => {
         document.title = "Sign Up - Notedly";
     });
+    const [values, setValues] = useState({});
+    const onChange = event => {
+        setValues({
+            ...values,
+            [event.target.name]: event.target.value
+        })
+    };
 
     return (
         <Wrapper>
             <h2>Sign Up</h2>
             <Form>
                 <label htmlFor="username">Username:</label>
-                <input type="text" required id="username" name="username" placeholder="username"/>
+                <input type="text" required id="username" name="username" placeholder="username" onChange={onChange}/>
 
                 <label htmlFor="email">Email:</label>
-                <input type="email" required id="email" name="email" placeholder="Email"/>
+                <input type="email" required id="email" name="email" placeholder="Email" onChange={onChange}/>
 
                 <label htmlFor="password">Password:</label>
-                <input type="password" required id="password" name="password" placeholder="Password"/>
+                <input type="password" required id="password" name="password" placeholder="Password"
+                       onChange={onChange}/>
                 <Button type='submit'>Submit</Button>
             </Form>
         </Wrapper>
