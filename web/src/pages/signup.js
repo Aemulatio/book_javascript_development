@@ -3,6 +3,7 @@ import styled from 'styled-components'
 import {useMutation, useApolloClient, gql} from "@apollo/client";
 
 import Button from "../components/Button";
+import {useNavigate} from "react-router-dom";
 
 const Wrapper = styled.div`
   border: 1px solid #f5f4f0;
@@ -42,9 +43,13 @@ const SignUp = (props) => {
         })
     };
 
+    const navigate = useNavigate();
+
     const [signUp, {loading, error}] = useMutation(SIGNUP_USER, {
         onCompleted: data => {
-            console.log(data.signUp)
+            localStorage.setItem("token", data.signUp);
+
+            navigate("/");
         }
     })
 
