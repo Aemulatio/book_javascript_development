@@ -34,8 +34,8 @@ const UserState = styled.div`
 
 const Header = () => {
 
-  const { data } = useQuery(IS_LOGGED_IN);
-
+  // const { data } = useQuery(IS_LOGGED_IN);
+  const data = { isLoggedIn: 1 };
   return (
     <HeaderBar>
       <img src={logo} alt="logo" height="40" />
@@ -45,7 +45,7 @@ const Header = () => {
           <p>Log Out</p>
         ) : (
           <p>
-            <Link to={"/signin"}>Sign In</Link> or{' '}
+            <Link to={"/signin"}>Sign In</Link> or{" "}
             <Link to={"/signup"}>Sign Up</Link>
           </p>
         )}
