@@ -8,17 +8,17 @@ import Pages from "./pages";
 import GlobalStyle from "./components/GlobalStyle";
 
 import { ApolloClient, ApolloProvider, createHttpLink, InMemoryCache } from "@apollo/client";
-import {setContext} from "apollo-link-context";
+import { setContext } from "apollo-link-context";
 
 const uri = process.env.API_URI;
 const httpLink = createHttpLink({ uri });
 const cache = new InMemoryCache();
 
-const authLink = setContext((_, {headers})=>{
-  return{
-    headers:{
+const authLink = setContext((_, { headers }) => {
+  return {
+    headers: {
       ...headers,
-      authorization: localStorage.getItem("token") || ''
+      authorization: localStorage.getItem("token") || ""
     }
   };
 });
@@ -34,7 +34,7 @@ const data = {
   isLoggedIn: !!localStorage.getItem("token")
 };
 
-cache.writeData({ data });
+cache.modify({ data });
 
 const App = () => {
   return (
