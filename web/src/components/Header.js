@@ -1,12 +1,15 @@
 import React from "react";
 import logo from "../img/logo.svg";
 import styled from "styled-components";
-import { useQuery, gql } from "@apollo/client";
+import { useQuery, gql, useApolloClient } from "@apollo/client";
 import { Link } from "react-router-dom";
 
 const IS_LOGGED_IN = gql`
-    {
-        isLoggedIn @client
+    query ReadLogged($id: String!) {
+        isLoggedIn(id: $id){
+            id
+            jwt
+        }
     }
 `;
 
@@ -33,9 +36,33 @@ const UserState = styled.div`
 `;
 
 const Header = () => {
+  console.log(window.localStorage.token);
+  // const client = useApolloClient();
 
-  // const { data } = useQuery(IS_LOGGED_IN);
+  // const {loading, error, data } = useQuery(IS_LOGGED_IN, {variables: window.localStorage.token});
+  /*const { data } = client.readQuery({
+    query: gql`
+        query ReadLogged($id: String!) {
+            isLoggedIn(id: $id){
+                id
+                jwt
+            }
+        }
+    `,
+    variables: {
+      id: localStorage.token
+    }
+
+  });*/
+
+
+  // console.log(loading, error, data);
   const data = { isLoggedIn: 1 };
+  // if (loading) return <p>Loading...</p>;
+  //
+  // if (error) return <p>Error! {console.log(error)}</p>;
+
+
   return (
     <HeaderBar>
       <img src={logo} alt="logo" height="40" />

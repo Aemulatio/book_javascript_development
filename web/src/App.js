@@ -10,9 +10,14 @@ import GlobalStyle from "./components/GlobalStyle";
 import { ApolloClient, ApolloProvider, createHttpLink, InMemoryCache } from "@apollo/client";
 import { setContext } from "apollo-link-context";
 
+
+const data = {
+  isLoggedIn: !!localStorage.getItem("token")
+};
+
 const uri = process.env.API_URI;
 const httpLink = createHttpLink({ uri });
-const cache = new InMemoryCache();
+const cache = new InMemoryCache({ typePolicies: { Query: { data } }});
 
 const authLink = setContext((_, { headers }) => {
   return {
@@ -30,11 +35,8 @@ const client = new ApolloClient({
   connectToDevTools: true
 });
 
-const data = {
-  isLoggedIn: !!localStorage.getItem("token")
-};
 
-cache.modify({ data });
+// cache.modify({ data });
 
 const App = () => {
   return (
