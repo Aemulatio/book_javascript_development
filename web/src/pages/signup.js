@@ -48,7 +48,24 @@ const SignUp = (props) => {
   const [signUp, { loading, error }] = useMutation(SIGNUP_USER, {
     onCompleted: data => {
       localStorage.setItem("token", data.signUp);
-      client.writeQuery({ data: { isLoggedIn: true } });
+
+      client.writeQuery({
+        query: gql`
+            query WriteLogged($jwt: String!) {
+                isLoggedIn(jwt: $jwt){
+                    id
+                    jwt
+                }
+            }`,
+        data: { // Contains the data to write
+          isLoggedIn: {
+            __typename: 'jwt',
+            id: data.signUp,
+            jwt: true
+          },
+        },
+      });
+
       navigate("/");
     }
   });
