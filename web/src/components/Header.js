@@ -57,7 +57,7 @@ const Header = () => {
 
 
   // console.log(loading, error, data);
-  const data = { isLoggedIn: 1 };
+  const data = { isLoggedIn: localStorage.token !== undefined };
   // if (loading) return <p>Loading...</p>;
   //
   // if (error) return <p>Error! {console.log(error)}</p>;
