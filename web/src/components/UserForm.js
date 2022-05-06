@@ -24,9 +24,8 @@ const Form = styled.div`
   }
 `;
 
-const UserForm = () => {
+const UserForm = (props) => {
     const [values, setValues] = useState();
-    const props = useParams();
 
     const onChange = (event) => {
         setValues({
@@ -34,10 +33,9 @@ const UserForm = () => {
             [event.target.name]: event.target.value
         })
     }
-
     return (
         <Wrapper>
-            {props.formType === 'signup' ? <h2>Sign Up</h2> : <h2>Sign In</h2>}
+            {props.formType.toLowerCase() === 'signup' ? <h2>Sign Up</h2> : <h2>Sign In</h2>}
             <Form
                 onSubmit={
                     e => {
@@ -54,7 +52,7 @@ const UserForm = () => {
                 {props.formType === 'signup' && (
                     <>
                         <label htmlFor="username">Username:</label>
-                        <input required type="text" id="username" name="username" placeholder="username"
+                        <input required type="text" id="username" name="username" placeholder="Username"
                                onChange={onChange}/>
                     </>
                 )}
@@ -62,7 +60,7 @@ const UserForm = () => {
                 <input required type="email" id="email" name="email" placeholder="Email"
                        onChange={onChange}/>
                 <label htmlFor="password">Password:</label>
-                <input required type="password" id="password" name="password" placeholder="password"
+                <input required type="password" id="password" name="password" placeholder="Password"
                        onChange={onChange}/>
                 <Button type="submit">Submit</Button>
             </Form>
