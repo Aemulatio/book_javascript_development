@@ -1,9 +1,9 @@
-import React, {useEffect, useState} from "react";
-import styled from 'styled-components'
-import {useMutation, useApolloClient, gql} from "@apollo/client";
+import React, { useEffect, useState } from "react";
+import styled from "styled-components";
+import { useMutation, useApolloClient, gql } from "@apollo/client";
 
 import Button from "../components/Button";
-import {useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const Wrapper = styled.div`
   border: 1px solid #f5f4f0;
@@ -32,52 +32,69 @@ const SIGNUP_USER = gql`
 
 
 const SignUp = (props) => {
-    useEffect(() => {
-        document.title = "Sign Up - Notedly";
+  useEffect(() => {
+    document.title = "Sign Up - Notedly";
+  });
+  const [values, setValues] = useState({});
+  const onChange = event => {
+    setValues({
+      ...values,
+      [event.target.name]: event.target.value
     });
-    const [values, setValues] = useState({});
-    const onChange = event => {
-        setValues({
-            ...values,
-            [event.target.name]: event.target.value
-        })
-    };
+  };
 
-    const navigate = useNavigate();
+  const navigate = useNavigate();
+  const client = useApolloClient();
+  const [signUp, { loading, error }] = useMutation(SIGNUP_USER, {
+    onCompleted: data => {
+      localStorage.setItem("token", data.signUp);
 
-    const [signUp, {loading, error}] = useMutation(SIGNUP_USER, {
-        onCompleted: data => {
-            localStorage.setItem("token", data.signUp);
+      client.writeQuery({
+        query: gql`
+            query WriteLogged($jwt: String!) {
+                isLoggedIn(jwt: $jwt){
+                    id
+                    jwt
+                }
+            }`,
+        data: { // Contains the data to write
+          isLoggedIn: {
+            __typename: 'jwt',
+            id: data.signUp,
+            jwt: true
+          },
+        },
+      });
 
-            navigate("/");
-        }
-    })
+      navigate("/");
+    }
+  });
 
 
-    return (
-        <Wrapper>
-            <h2>Sign Up</h2>
-            <Form onSubmit={event => {
-                event.preventDefault();
-                signUp({
-                    variables: {
-                        ...values
-                    }
-                })
-            }}>
-                <label htmlFor="username">Username:</label>
-                <input type="text" required id="username" name="username" placeholder="username" onChange={onChange}/>
+  return (
+    <Wrapper>
+      <h2>Sign Up</h2>
+      <Form onSubmit={event => {
+        event.preventDefault();
+        signUp({
+          variables: {
+            ...values
+          }
+        });
+      }}>
+        <label htmlFor="username">Username:</label>
+        <input type="text" required id="username" name="username" placeholder="username" onChange={onChange} />
 
-                <label htmlFor="email">Email:</label>
-                <input type="email" required id="email" name="email" placeholder="Email" onChange={onChange}/>
+        <label htmlFor="email">Email:</label>
+        <input type="email" required id="email" name="email" placeholder="Email" onChange={onChange} />
 
-                <label htmlFor="password">Password:</label>
-                <input type="password" required id="password" name="password" placeholder="Password"
-                       onChange={onChange}/>
-                <Button type='submit'>Submit</Button>
-            </Form>
-        </Wrapper>
-    )
-}
+        <label htmlFor="password">Password:</label>
+        <input type="password" required id="password" name="password" placeholder="Password"
+               onChange={onChange} />
+        <Button type="submit">Submit</Button>
+      </Form>
+    </Wrapper>
+  );
+};
 
-export default SignUp
+export default SignUp;
