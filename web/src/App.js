@@ -2,49 +2,50 @@
 // This is the main entry point of our application
 
 import React from "react";
-import { createRoot } from "react-dom/client";
+import {createRoot} from "react-dom/client";
 
 import Pages from "./pages";
 import GlobalStyle from "./components/GlobalStyle";
 
-import { ApolloClient, ApolloProvider, createHttpLink, InMemoryCache } from "@apollo/client";
-import { setContext } from "apollo-link-context";
+import {ApolloClient, ApolloProvider, createHttpLink, InMemoryCache} from "@apollo/client";
+import {setContext} from "apollo-link-context";
 
 
 const data = {
-  isLoggedIn: !!localStorage.getItem("token")
+    isLoggedIn: !!localStorage.getItem("token")
 };
 
 const uri = process.env.API_URI;
 const cache = new InMemoryCache();
 const httpLink = createHttpLink({uri});
 
-const authLink = setContext((_, { headers }) => {
-  return {
-    headers: {
-      ...headers,
-      authorization: localStorage.getItem("token") || ""
-    }
-  };
+const authLink = setContext((_, {headers}) => {
+    return {
+        headers: {
+            ...headers,
+            authorization: localStorage.getItem("token") || ""
+        }
+    };
 });
 
 const client = new ApolloClient({
-  link: authLink.concat(httpLink),
-  cache,
-  resolvers: {},
-  connectToDevTools: true
+    link: authLink.concat(httpLink),
+    cache,
+    resolvers: {},
+    connectToDevTools: true
 });
 
-
+// cache.write({data})
+// client.onResetStore(() => cache.write({data}))
 // cache.modify({ data });
 
 const App = () => {
-  return (
-    <ApolloProvider client={client}>
-      <GlobalStyle />
-      <Pages />
-    </ApolloProvider>
-  );
+    return (
+        <ApolloProvider client={client}>
+            <GlobalStyle/>
+            <Pages/>
+        </ApolloProvider>
+    );
 };
 
-createRoot(document.querySelector("#root")).render(<App />);
+createRoot(document.querySelector("#root")).render(<App/>);

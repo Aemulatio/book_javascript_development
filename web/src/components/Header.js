@@ -1,16 +1,22 @@
 import React from "react";
 import logo from "../img/logo.svg";
 import styled from "styled-components";
-import { useQuery, gql, useApolloClient } from "@apollo/client";
-import { Link } from "react-router-dom";
+import {useQuery, gql, useApolloClient} from "@apollo/client";
+import {Link, useNavigate, withRouter} from "react-router-dom";
+import ButtonAsLink from "./ButtonAsLink";
 
+// const IS_LOGGED_IN = gql`
+//     query ReadLogged($id: String!) {
+//         isLoggedIn(id: $id){
+//             id
+//             jwt
+//         }
+//     }
+// `;
 const IS_LOGGED_IN = gql`
-    query ReadLogged($id: String!) {
-        isLoggedIn(id: $id){
-            id
-            jwt
-        }
-    }
+{
+    isLoggedIn @client
+}
 `;
 
 const HeaderBar = styled.header`
@@ -36,49 +42,51 @@ const UserState = styled.div`
 `;
 
 const Header = () => {
-  console.log(window.localStorage.token);
-  // const client = useApolloClient();
+    console.log(window.localStorage.token);
+    const client = useApolloClient();
+    const navigate = useNavigate();
 
-  // const {loading, error, data } = useQuery(IS_LOGGED_IN, {variables: window.localStorage.token});
-  /*const { data } = client.readQuery({
-    query: gql`
-        query ReadLogged($id: String!) {
-            isLoggedIn(id: $id){
-                id
-                jwt
-            }
-        }
-    `,
-    variables: {
-      id: localStorage.token
-    }
+    // const {data, client} = useQuery(IS_LOGGED_IN);
+    /*const { data } = client.readQuery({
+      query: gql`
+          query ReadLogged($id: String!) {
+              isLoggedIn(id: $id){
+                  id
+                  jwt
+              }
+          }
+      `,
+      variables: {
+        id: localStorage.token
+      }
 
-  });*/
+    });*/
 
+    const data = {isLoggedIn: localStorage.token !== undefined};
 
-  // console.log(loading, error, data);
-  const data = { isLoggedIn: localStorage.token !== undefined };
-  // if (loading) return <p>Loading...</p>;
-  //
-  // if (error) return <p>Error! {console.log(error)}</p>;
-
-
-  return (
-    <HeaderBar>
-      <img src={logo} alt="logo" height="40" />
-      <LogoText>Notedly</LogoText>
-      <UserState>
-        {data.isLoggedIn ? (
-          <p>Log Out</p>
-        ) : (
-          <p>
-            <Link to={"/signin"}>Sign In</Link> or{" "}
-            <Link to={"/signup"}>Sign Up</Link>
-          </p>
-        )}
-      </UserState>
-    </HeaderBar>
-  );
+    return (
+        <HeaderBar>
+            <img src={logo} alt="logo" height="40"/>
+            <LogoText>Notedly</LogoText>
+            <UserState>
+                {data.isLoggedIn ? (
+                    <ButtonAsLink onClick={() => {
+                        localStorage.removeItem("token");
+                        client.resetStore();
+                        navigate("/");
+                    }}>
+                        Log Out
+                    </ButtonAsLink>
+                ) : (
+                    <p>
+                        <Link to={"/signin"}>Sign In</Link> or{" "}
+                        <Link to={"/signup"}>Sign Up</Link>
+                    </p>
+                )}
+            </UserState>
+        </HeaderBar>
+    );
 };
 
+// export default withRouter(Header);
 export default Header;
