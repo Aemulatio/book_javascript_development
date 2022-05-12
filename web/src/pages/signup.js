@@ -53,7 +53,7 @@ const SignUp = (props) => {
 
     return (
         <>
-            <UserForm action="signup" formType="signup"/>
+            <UserForm action={signUp} formType="signup"/>
             {loading && <p>Loading...</p>}
             {error && <p>Error creating an account</p>}
         </>
