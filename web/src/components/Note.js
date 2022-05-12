@@ -41,7 +41,7 @@ const Note = ({ note }) => {
         </MetaInfo>
         <UserActions>
           <em>Favorites:</em> {note.favoriteCount}
-          <ReactMarkdown source={note.content} />
+          <ReactMarkdown children={note.content} />
         </UserActions>
       </MetaData>
       <ReactMarkdown children={note.content} />
