@@ -42,7 +42,6 @@ const UserState = styled.div`
 `;
 
 const Header = () => {
-    console.log(window.localStorage.token);
     const client = useApolloClient();
     const navigate = useNavigate();
 
