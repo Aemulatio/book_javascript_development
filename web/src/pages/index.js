@@ -15,7 +15,7 @@ import Favorites from "./favorites";
 import NotePage from "./note";
 import SignUp from "./signup";
 import SignIn from "./signin";
-import { useQuery, gql } from "@apollo/client";
+import NewNote from "./new";
 
 
 const Pages = () => {
@@ -29,6 +29,9 @@ const Pages = () => {
           </Route>
           <Route exact path='/favorites' element={<PrivateRoute/>}>
             <Route path="/favorites" element={<Favorites />} />
+          </Route>
+          <Route exact path='/new' element={<PrivateRoute/>}>
+            <Route path="/new" element={<NewNote />} />
           </Route>
           <Route path="/note/:id" element={<NotePage />} />
           <Route path="/signup" element={<SignUp />} />
